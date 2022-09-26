@@ -98,6 +98,12 @@
     color: #70777f;
 } */
 
+.perdeu{
+    color:red;
+}
+.ganhou {
+    color:green;
+}
 
 .chutar-resposta input{
     height:40px;
