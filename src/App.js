@@ -38,22 +38,18 @@ export default function App() {
   const [fimDeJogo, setFimDeJogo] = React.useState(false);
   const [acertos, setAcertos] = React.useState(0);
   const [arrayLetras, setArrayLetras] = React.useState([]);
-  
-  console.log(acertos, "voce acertou isso de letras")
-  function iniciarJogo() {
-    if(botoes === false){
 
-        setBotoes(!botoes);
+  function iniciarJogo() {
+    if (botoes === false) {
+      setBotoes(!botoes);
     }
     setErros(0);
     setAcertos(0);
-    setArrayLetras([])
-    setClassesResult("jogo-iniciado")
-    setFimDeJogo(false)
-    setPalavraChute("")
+    setArrayLetras([]);
+    setClassesResult("jogo-iniciado");
+    setFimDeJogo(false);
+    setPalavraChute("");
 
-
-    
     let index = Math.floor(Math.random() * palavras.length);
     setPalavra(palavras[index]);
   }
@@ -82,97 +78,84 @@ export default function App() {
       setArrayLetras(novoArray);
     }
 
-    console.log(arrayLetras + " arrayLetras");
-    console.log(palavraEscolhida + " palavraEscolhida");
-    console.log(palavraChute + " palavraChute");
-
     if (
       palavraEscolhida
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .includes(letra)
     ) {
-      console.log(new Set(palavraEscolhida).size ,"voce acertou");
-      const novoAcerto = acertos+1;
+      const novoAcerto = acertos + 1;
       setAcertos(novoAcerto);
-      if(new Set(palavraEscolhida.normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")).size === novoAcerto){
-        setClassesResult("jogo-iniciado ganhou")
-        setFimDeJogo(true)
-
-    }
-      
+      if (
+        new Set(
+          palavraEscolhida.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        ).size === novoAcerto
+      ) {
+        setClassesResult("jogo-iniciado ganhou");
+        setFimDeJogo(true);
+      }
     } else {
-        const novoErro = erros+1;
+      const novoErro = erros + 1;
       setErros(novoErro);
-      if(novoErro>5){
-        const novoArrayLetras = [...arrayLetras, ...palavraEscolhida.split("")]
-        setArrayLetras(novoArrayLetras)
+      if (novoErro > 5) {
+        const novoArrayLetras = [...arrayLetras, ...palavraEscolhida.split("")];
+        setArrayLetras(novoArrayLetras);
 
-        setClassesResult("jogo-iniciado perdeu")
-        setFimDeJogo(true)
-        
-         
+        setClassesResult("jogo-iniciado perdeu");
+        setFimDeJogo(true);
       }
     }
   }
-  
+
   function verificarLetra(letraClicada, idx, ary) {
-    
-      
-      if (arrayLetras.includes(letraClicada)) {
-        
-          return `${letraClicada}`;
-          
-        }
-        if (!arrayLetras.includes(letraClicada)) {
-            ary[idx] = "_";
-           
-            return " _";
-        }
-        
+    if (arrayLetras.includes(letraClicada)) {
+      return `${letraClicada}`;
     }
-    
-    
+    if (!arrayLetras.includes(letraClicada)) {
+      ary[idx] = "_";
+
+      return " _";
+    }
+  }
+
   function chutarPalavra() {
     if (palavraChute === palavraEscolhida) {
-      alert("Você ganhou");
-      setClassesResult("jogo-iniciado ganhou")
+      setClassesResult("jogo-iniciado ganhou");
       setArrayLetras(palavraEscolhida);
-      setFimDeJogo(true)
-
+      setFimDeJogo(true);
     } else {
       setErros(6);
 
-    setClassesResult("jogo-iniciado perdeu")
-    const novoArrayLetras = [...arrayLetras, ...palavraEscolhida.split("")]
-        setArrayLetras(novoArrayLetras)
-      alert("Você perdeu");
-      setFimDeJogo(true)
+      setClassesResult("jogo-iniciado perdeu");
+      const novoArrayLetras = [...arrayLetras, ...palavraEscolhida.split("")];
+      setArrayLetras(novoArrayLetras);
 
+      setFimDeJogo(true);
     }
   }
-  const [classesResult, setClassesResult] = React.useState("jogo-iniciado")
+  const [classesResult, setClassesResult] = React.useState("jogo-iniciado");
 
-  function mudarClasseResult(){
-    if(erros>5){
-        setClassesResult("jogo-iniciado perdeu")
+  function mudarClasseResult() {
+    if (erros > 5) {
+      setClassesResult("jogo-iniciado perdeu");
     }
-    
   }
   return (
     <div className="container">
       <div className="parte-de-cima">
         <div className="forca">
-          <img data-identifier="game-image" src={`./assets/forca${erros}.png`} alt="imagem forca"></img>
+          <img
+            data-identifier="game-image"
+            src={`./assets/forca${erros}.png`}
+            alt="imagem forca"
+          ></img>
         </div>
         <div className="escolher-palavra">
-          <button data-identifier="choose-word" onClick={iniciarJogo}>Escolher palavra</button>
+          <button data-identifier="choose-word" onClick={iniciarJogo}>
+            Escolher palavra
+          </button>
         </div>
-        <div
-            data-identifier="word"
-          className={classesResult}
-        >
+        <div data-identifier="word" className={classesResult}>
           {palavraEscolhida
             .split("")
             .map((p, idx, ary) => verificarLetra(p, idx, ary))}
@@ -182,7 +165,6 @@ export default function App() {
         <div className="letras">
           {alfabeto.map((a) => (
             <button
-                
               onClick={() => (marcarLetra(a), mudarClasseResult())}
               data-identifier="letter"
               disabled={!botoes || arrayLetras.includes(a) || fimDeJogo}
@@ -201,7 +183,7 @@ export default function App() {
           />
           <button
             data-identifier="guess-button"
-            disabled={!botoes ? true : false}
+            disabled={!botoes ? true : false|| fimDeJogo}
             onClick={() => chutarPalavra()}
           >
             Chutar!
