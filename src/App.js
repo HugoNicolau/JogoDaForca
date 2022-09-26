@@ -35,7 +35,8 @@ console.log("teste")
 const [botoes, setBotoes] = React.useState(false)
 const [erros, setErros] = React.useState(0)
 const [palavraEscolhida, setPalavra] = React.useState("")
-let arrayPalavra = []
+
+const [arrayLetras,setArrayLetras] = React.useState([])
 function iniciarJogo(){
     setBotoes(!botoes)
     setErros(0)
@@ -43,14 +44,32 @@ function iniciarJogo(){
     alert("fui clicado")
    let index =  Math.floor(Math.random() * palavras.length);
    setPalavra(palavras[index])
-    arrayPalavra=palavraEscolhida;
-    console.log(arrayPalavra)
+    
 
 }
 function marcarLetra(letra){
-alert(letra);
-}
 
+
+const novoArray = [...arrayLetras, letra]
+setArrayLetras(novoArray)
+console.log(arrayLetras)
+
+if(palavraEscolhida.includes(letra)){
+    console.log("voce acertou")
+}
+else{
+    setErros(erros+1)
+}
+}
+function verificarLetra(letraClicada){
+    if(arrayLetras.includes(letraClicada)){
+
+        return `${letraClicada}`
+    }
+    else{
+       return " _"
+    } 
+}
   return (
     <div className="container">
       <div className="parte-de-cima">
@@ -60,11 +79,11 @@ alert(letra);
         <div className="escolher-palavra">
           <button onClick={iniciarJogo}>Escolher palavra</button>
         </div>
-        <div className="jogo-iniciado">{palavraEscolhida.split("").map((p)=> " _")}</div>
+        <div className="jogo-iniciado">{palavraEscolhida.split("").map((p)=> verificarLetra(p))}</div>
       </div>
       <div className="parte-de-baixo">
         <div className="letras">
-            {alfabeto.map((a) => <button onClick={()=> (marcarLetra(a), setErros(erros+1))} disabled={!botoes ? true : false}>{a.toUpperCase()}</button>)}
+            {alfabeto.map((a) => <button onClick={()=> (marcarLetra(a))} disabled={!botoes || (arrayLetras.includes(a))}>{a.toUpperCase()}</button>)}
         </div>
         <div className="chutar-resposta">
             Já sei a palavra! 
